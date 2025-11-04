@@ -1,0 +1,163 @@
+# Generate a .txt file with the detailed explanation of the PiHoleLite server code and usage instructions
+
+explanation_text = """
+PiHole-Lite DNS Server - Detailed Explanation and Deployment Guide
+===================================================================
+
+1. Overview
+-----------
+This document explains the structure and functionality of the PiHole-Lite DNS server
+built in C# using raw sockets. It also provides deployment steps to configure
+other devices (e.g., Mac, Windows, or phones) to use the Raspberry Pi server
+as their DNS resolver.
+
+-------------------------------------------------------------------
+
+2. Code Structure and Explanation
+---------------------------------
+
+A. Imports
+----------
+using System.Net;
+using System.Net.Sockets;
+using System.Buffers.Binary;
+using System.Text;
+using System.Threading;
+
+These provide access to networking, binary encoding, and threading utilities
+for handling UDP sockets and atomic counters.
+
+B. Global Counters
+------------------
+long totalQueries, blockedQueries, forwardedQueries, failedQueries;
+
+These track DNS statistics using thread-safe operations.
+
+C. Server Setup
+---------------
+The server binds to UDP port 5300 on 0.0.0.0 (all interfaces) and loads
+a blocklist from "blocklist.txt". If the file does not exist, it is created
+with sample domains.
+
+D. Blocklist Monitoring
+-----------------------
+FileSystemWatcher watches "blocklist.txt" for changes. When the file
+is modified, the list reloads automatically (after a short delay).
+
+E. DNS Socket Initialization
+----------------------------
+A UDP socket listens on port 5300:
+sock.Bind(new IPEndPoint(IPAddress.Parse("0.0.0.0"), 5300));
+
+The server can now accept DNS packets from localhost or LAN devices.
+
+F. Main Loop
+------------
+Each packet is received using sock.ReceiveFrom(...), parsed for QNAME (domain name),
+QTYPE, and QCLASS. The server then checks if the domain is in the blocklist.
+
+If blocked:
+    -> A custom response with IP 0.0.0.0 is returned.
+If not blocked:
+    -> The query is forwarded to Cloudflare DNS (1.1.1.1:53), and
+       the reply is sent back to the requester.
+
+G. Response Construction
+------------------------
+BuildBlockedResponse():
+- Copies the request ID.
+- Sets flags for "standard DNS response".
+- Adds one Question and one Answer section.
+- The Answer returns Type=A, Class=IN, TTL=60, and RDATA=0.0.0.0.
+
+ForwardToUpstreamAsync():
+- Sends the request to 1.1.1.1:53 using UdpClient.
+- Waits for the response and returns it to the caller.
+
+H. Statistics
+-------------
+A background task prints live stats every 60 seconds:
+- Total queries
+- Blocked queries
+- Forwarded queries
+- Upstream failures
+
+-------------------------------------------------------------------
+
+3. Running on Raspberry Pi
+--------------------------
+
+1. Build and run:
+   dotnet run
+
+2. Test locally:
+   dig google.com @127.0.0.1 -p 5300
+   dig ads.google.com @127.0.0.1 -p 5300
+
+3. Output example:
+   [+] Listening on UDP://0.0.0.0:5300
+   [x] BLOCKED ads.google.com
+
+-------------------------------------------------------------------
+
+4. Connecting Other Devices
+---------------------------
+
+A. Find Raspberry Pi IP:
+   hostname -I
+   Example: 192.168.1.45
+
+B. Test from another machine:
+   dig google.com @192.168.1.45 -p 5300
+   dig ads.google.com @192.168.1.45 -p 5300
+
+C. (Optional) Run on standard DNS port 53:
+   dotnet publish -c Release -r linux-arm64 -o ./out
+   sudo setcap 'cap_net_bind_service=+ep' ./out/PiholeLite
+   ./out/PiholeLite
+
+D. Configure Mac as DNS Client:
+   System Settings → Network → Wi-Fi → Details → DNS → Add 192.168.1.45
+
+E. Configure Windows:
+   Control Panel → Network & Internet → Change Adapter Options →
+   Wi-Fi → Properties → IPv4 → DNS → Add 192.168.1.45
+
+F. Configure Linux:
+   Edit /etc/resolv.conf → nameserver 192.168.1.45
+
+G. Router-Level Setup:
+   Set DNS server to your Pi’s IP (192.168.1.45) so all devices on
+   the network use PiHole-Lite automatically.
+
+-------------------------------------------------------------------
+
+5. Validation
+-------------
+Use:
+   nslookup google.com
+   nslookup ads.google.com
+
+Blocked domains return 0.0.0.0.
+Normal domains resolve normally through Cloudflare.
+
+-------------------------------------------------------------------
+
+6. Summary
+----------
+✅ Custom C# DNS server using raw sockets
+✅ Dynamic blocklist reloading
+✅ Query stats tracking
+✅ Forwarding via 1.1.1.1
+✅ LAN deployment and testing
+
+This implementation represents a minimal, functional DNS filtering
+server prototype similar to Pi-hole, fulfilling the server-side
+component of your project.
+"""
+
+file_path = "/mnt/data/PiHoleLite_Explanation.txt"
+with open(file_path, "w") as f:
+    f.write(explanation_text)
+
+file_path

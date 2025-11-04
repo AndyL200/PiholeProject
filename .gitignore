@@ -1,0 +1,18 @@
+# dotnet
+bin/
+obj/
+out/
+*.user
+*.suo
+*.swp
+
+# local runtime files
+*.log
+update_log.txt
+
+# environment + editor
+.vscode/
+.idea/
+
+# blocklists: keep the sample, ignore the huge live file
+blocklist.txt
