@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DNS Blocker Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        .table-row-allowed {
+            background-color: #f0fdf4;
+        }
+
+        .table-row-blocked {
+            background-color: #fee2e2;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        #logTableBody {
+            min-height: 300px;
+            display: table-row-group;
+        }
+    </style>
+</head>
+<body>
+    <div id="dashboard-container" class="min-h-screen max-w-full overflow-x-hidden mx-auto p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-800 flex items-center justify-center">
+                <i class="fas fa-shield-alt text-indigo-600 mr-3"></i>
+                DNS Blocker Dashboard
+            </h1>
+            <p class="text-gray-500 mt-2">Real-time network activity and statistics.</p>
+        </header>
+
+        <div id="stats-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="card bg-white p-6 rounded-xl shadow-lg
+border-l-4 border-indigo-500">
+                <p class="text-sm font-medium text-gray-500">Total Queries</p>
+                <p id="totalQueries" class="text-3xl font-bold text-gray-900 mt-1">...</p>
+            </div>
+            <div class="card bg-white p-6 rounded-xl shadow-lg border-l-4 border-red-500">
+                <p class="text-sm font-medium text-gray-500">Blocked Queries</p>
+                <p id="blockedQueries" class="text-3xl font-bold text-gray-900 mt-1">...</p>
+            </div>
+            <div class="card bg-white p-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
+                <p class="text-sm font-medium text-gray-500">Block Rate</p>
+                <p id="blockedPercentage" class="text-3xl font-bold text-gray-900 mt-1">...</p>
+            </div>
+        </div>
+
+        <div class="card bg-white p-6 rounded-xl shadow-lg mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Top 5 Blocked Domains</h2>
+            <div id="topDomains" class="space-y-3 h-56">
+            </div>
+        </div>
+
+        <div class="card bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client IP</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Domain</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Response IP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logTableBody" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        let pollIntervalId;
+        const POLL_RATE_MS = 2000; 
+        async function fetchData(url) {
+            let absoluteUrl;
+            if (url.startsWith('/')) {
+                absoluteUrl = window.location.origin + url;
+            } else {
+                absoluteUrl = url;
+            }
+
+            try {
+                const response = await fetch(absoluteUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error(`Failed to fetch data from ${url}:`, error);
+                return null;
+            }
+        }
+
+        async function updateStats() {
+            const liveStats = await fetchData('/api/stats/live');
+            if (liveStats) {
+                document.getElementById('totalQueries').textContent = liveStats.totalQueries.toLocaleString();
+                document.getElementById('blockedQueries').textContent = liveStats.blockedQueries.toLocaleString();
+                document.getElementById('blockedPercentage').textContent = `${liveStats.blockedPercentage.toFixed(2)}%`;
+            }
+
+            const fileStats = await fetchData('/api/stats/file');
+            if (fileStats && fileStats.topBlockedDomains) {
+                updateTopDomains(fileStats.topBlockedDomains);
+            }
+            const logs = await fetchData('/api/logs');
+            if (logs) {
+                updateRecentLogs(logs);
+            }
+        }
+
+        function updateTopDomains(topDomains) {
+            const container = document.getElementById('topDomains');
+            container.innerHTML = ''; // Clear existing logs
+
+            const entries = Object.entries(topDomains);
+            if (entries.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 p-3">No blocked activity yet.</p>';
+                return;
+            }
+
+            entries.forEach(([domain, count], index) => {
+                const item = document.createElement('div');
+                item.className = 'flex justify-between items-center text-gray-700 p-3 bg-red-50 rounded-lg';
+                item.innerHTML = `
+                            <span class="font-medium truncate">${index + 1}. ${domain}</span>
+                            <span class="font-bold text-red-600">${count.toLocaleString()}</span>
+                        `;
+                container.appendChild(item);
+            });
+        }
+
+        function updateRecentLogs(logs) {
+            const tbody = document.getElementById('logTableBody');
+            tbody.innerHTML = ''; // Clear existing logs
+
+            logs.forEach(log => {
+                const tr = document.createElement('tr');
+                const isBlocked = log.status === 'Blocked';
+                tr.className = isBlocked ? 'table-row-blocked' : 'table-row-allowed';
+
+                const date = new Date(log.timestamp);
+                const timeString = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+                const dateString = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+                const statusBadgeClass = isBlocked
+                    ? 'bg-red-200 text-red-800'
+                    : 'bg-green-200 text-green-800';
+
+                tr.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${dateString} ${timeString}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${log.clientIP}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 truncate max-w-xs">${log.domain}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="status-badge ${statusBadgeClass}">${log.status}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${log.responseIP}</td>
+                        `;
+                tbody.appendChild(tr);
+            });
+        }
+        function startPolling() {
+            if (!pollIntervalId) {
+                console.log("Starting dashboard polling...");
+                pollIntervalId = setInterval(updateStats, POLL_RATE_MS);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+            startPolling();
+        });
+    </script>
+</body>
+</html>

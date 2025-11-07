@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- CRITICAL FIX: This property ensures views and static files are included in the compilation -->
+    <EnableDefaultContentItems>true</EnableDefaultContentItems>
+  </PropertyGroup>
+<ItemGroup>
+    <None Update="data\blocklist.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+</ItemGroup>
+
+</Project>

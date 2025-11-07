@@ -1,0 +1,55 @@
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\bin\Debug\net8.0\DashboardWeb.staticwebassets.endpoints.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\bin\Debug\net8.0\DashboardWeb.exe
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\bin\Debug\net8.0\DashboardWeb.deps.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\bin\Debug\net8.0\DashboardWeb.runtimeconfig.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\bin\Debug\net8.0\DashboardWeb.dll
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\bin\Debug\net8.0\DashboardWeb.pdb
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.AssemblyInfoInputs.cache
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.AssemblyInfo.cs
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.csproj.CoreCompileInputs.cache
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.RazorAssemblyInfo.cache
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.RazorAssemblyInfo.cs
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\scopedcss\bundle\DashboardWeb.styles.css
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.dll
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\refint\DashboardWeb.dll
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.pdb
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\DashboardWeb.genruntimeconfig.cache
+C:\Users\vaish\OneDrive\Desktop\COMP 6700(Dr.E)\DashboardWeb\obj\Debug\net8.0\ref\DashboardWeb.dll
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.AssemblyInfoInputs.cache
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.AssemblyInfo.cs
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.csproj.CoreCompileInputs.cache
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.RazorAssemblyInfo.cache
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.RazorAssemblyInfo.cs
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\bin\Debug\net8.0\DashboardWeb.staticwebassets.endpoints.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\bin\Debug\net8.0\DashboardWeb.exe
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\bin\Debug\net8.0\DashboardWeb.deps.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\bin\Debug\net8.0\DashboardWeb.runtimeconfig.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\bin\Debug\net8.0\DashboardWeb.dll
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\bin\Debug\net8.0\DashboardWeb.pdb
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\scopedcss\bundle\DashboardWeb.styles.css
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.dll
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\refint\DashboardWeb.dll
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.pdb
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\DashboardWeb.genruntimeconfig.cache
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\obj\Debug\net8.0\ref\DashboardWeb.dll
+C:\Users\vaish\OneDrive\Desktop\DashboardWeb_copy\bin\Debug\net8.0\data\blocklist.txt

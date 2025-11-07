@@ -1,0 +1,204 @@
+﻿@{
+ViewData["Title"] = "DNS Blocker Dashboard";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>@ViewData["Title"]</title>
+		<style>
+			body {
+			font-family: Arial, sans-serif;
+			margin: 20px;
+			background-color: #f4f4f9;
+			}
+			.container {
+			max-width: 1200px;
+			margin: auto;
+			background: white;
+			padding: 20px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			}
+			h1 {
+			color: #333;
+			}
+			.stat-card {
+			background-color: #e0f7fa;
+			border-left: 5px solid #00bcd4;
+			padding: 15px;
+			margin-bottom: 20px;
+			border-radius: 4px;
+			}
+			.stat-card h3 {
+			margin-top: 0;
+			color: #00bcd4;
+			}
+			.stat-card p {
+			font-size: 2em;
+			margin: 5px 0 0;
+			font-weight: bold;
+			}
+			.stats-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 20px;
+			margin-bottom: 30px;
+			}
+			.log-table {
+			width: 100%;
+			border-collapse: collapse;
+			}
+			.log-table th, .log-table td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: left;
+			}
+			.log-table th {
+			background-color: #f2f2f2;
+			color: #333;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>DNS Blocker Dashboard 🛡️</h1>
+
+			<div class="stats-grid">
+				<div class="stat-card">
+					<h3>Total Queries</h3>
+					<p id="total-queries">Fetching...</p>
+				</div>
+				<div class="stat-card">
+					<h3>Blocked Percentage</h3>
+					<p id="blocked-percentage">Fetching...</p>
+				</div>
+				<div class="stat-card">
+					<h3>Top 5 Blocked Domains</h3>
+					<ul id="top-domains-list">
+						<li>Fetching domains...</li>
+					</ul>
+				</div>
+			</div>
+
+			<h2>Recent Activity (Last 10 Queries)</h2>
+			<table class="log-table">
+				<thead>
+					<tr>
+						<th>Timestamp</th>
+						<th>Client IP</th>
+						<th>Domain</th>
+						<th>Status</th>
+						<th>Response IP</th>
+					</tr>
+				</thead>
+				<tbody id="log-table-body">
+					<tr>
+						<td colspan="5">Loading logs...</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<script>
+			// --- FIX 1: Define ALL endpoints required by the dashboard ---
+			const LIVE_STATS_ENDPOINT = '/api/stats/live';
+			const FILE_STATS_ENDPOINT = '/api/stats/file';
+			const LOGS_ENDPOINT = '/api/logs';
+
+			// Function to refresh Live Stats (Total/Blocked/Percentage)
+			async function refreshLiveStats() {
+			try {
+			const response = await fetch(LIVE_STATS_ENDPOINT);
+
+			if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const stats = await response.json();
+
+			document.getElementById('total-queries').innerText = stats.totalQueries.toLocaleString();
+			document.getElementById('blocked-queries').innerText = stats.blockedQueries.toLocaleString();
+			document.getElementById('blocked-percentage').innerText = `${stats.blockedPercentage}%`;
+
+			} catch (error) {
+			console.error('Error fetching live stats:', error);
+			document.getElementById('total-queries').innerText = 'Error';
+			document.getElementById('blocked-percentage').innerText = 'Error';
+			}
+			}
+
+			// 🔑 FIX 2: NEW Function to refresh File Stats (Top 5 Domains)
+			async function refreshFileStats() {
+			try {
+			const response = await fetch(FILE_STATS_ENDPOINT);
+			if (!response.ok) throw new Error('Failed to fetch file stats');
+			const stats = await response.json();
+
+			const topList = document.getElementById('top-domains-list');
+			topList.innerHTML = ''; // Clear existing list
+
+			// Assumes 'TopBlockedDomains' is a key-value object from the API
+			const topDomains = stats.topBlockedDomains;
+
+			if (Object.keys(topDomains).length > 0) {
+			for (const domain in topDomains) {
+			const listItem = document.createElement('li');
+			listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+			listItem.innerHTML = `
+			${domain}
+			<span class="badge bg-danger rounded-pill">${topDomains[domain].toLocaleString()}</span>
+			`;
+			topList.appendChild(listItem);
+			}
+			} else {
+			topList.innerHTML = '<li class="list-group-item">No blocked domains yet.</li>';
+			}
+
+			} catch (error) {
+			console.error('Error fetching file stats:', error);
+			const topList = document.getElementById('top-domains-list');
+			topList.innerHTML = '<li class="list-group-item text-danger">Error fetching top domains.</li>';
+			}
+			}
+
+			// Function to refresh the log table data
+			async function refreshLogs() {
+			try {
+			const logResponse = await fetch(LOGS_ENDPOINT);
+			if (!logResponse.ok) throw new Error('Failed to fetch logs');
+			const logs = await logResponse.json();
+
+			const logTableBody = document.getElementById('log-table-body');
+			logTableBody.innerHTML = ''; // Clear existing rows
+
+			logs.forEach(log => {
+			const row = logTableBody.insertRow();
+			const timestamp = new Date(log.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', month: '2-digit', day: '2-digit', year: 'numeric' });
+
+			row.insertCell().innerText = timestamp;
+			row.insertCell().innerText = log.clientIP;
+			row.insertCell().innerText = log.domain;
+			row.insertCell().innerText = log.status;
+			row.insertCell().innerText = log.responseIP;
+
+			row.cells[3].style.color = log.status === 'Blocked' ? 'red' : 'green';
+			});
+			} catch (error) {
+			console.error('Error fetching logs:', error);
+			}
+			}
+
+			// 🔑 FIX 3: Start and schedule BOTH stats functions
+			refreshLiveStats();
+			refreshFileStats();
+			refreshLogs();
+
+			setInterval(refreshLiveStats, 3000);
+			setInterval(refreshFileStats, 10000); // File stats refresh less often (10s)
+			setInterval(refreshLogs, 3000);
+
+		</script>
+	</body>
+</html>

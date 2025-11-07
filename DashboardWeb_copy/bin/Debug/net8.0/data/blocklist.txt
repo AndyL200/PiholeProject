@@ -1,0 +1,4 @@
+# Default Blocklist 
+example.com
+tracking.net
+ads.google.com
